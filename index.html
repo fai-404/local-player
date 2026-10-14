@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>My Music</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setupView" hidden>
+  <h2>My Music</h2>
+  <p>Your songs live in Telegram. This player streams them from your own bot — no storage used on your phone.</p>
+  <ol>
+    <li>Open Telegram and message <code>@BotFather</code> → send <code>/newbot</code> and follow the steps. Copy the token it gives you.</li>
+    <li>Open your new bot and <b>send it your songs</b> as audio files or music files.</li>
+    <li>Paste the token below and tap Save, then Sync.</li>
+  </ol>
+  <input id="tokenInput" type="password" placeholder="Bot token (e.g. 123456:ABC...)" autocomplete="off">
+  <button class="btn" id="saveTokenBtn">Save &amp; Continue</button>
+  <p style="font-size:12px;margin-top:14px;">Notes: the token stays in this browser only — keep it on a private device, or revoke it via @BotFather. Sync within 24 hours of sending songs. Files over 20 MB can't be streamed via the bot API. Don't set a webhook on the bot.</p>
+</div>
+
+<!-- APP -->
+<div id="appView" hidden>
+  <header>
+    <h1>My Music <span><button id="syncBtn" title="Sync new songs">sync</button> <button id="resetBtn" title="Change bot / erase data">reset</button></span></h1>
+    <input id="search" type="search" placeholder="Search songs...">
+  </header>
+  <nav>
+    <button id="tabSongs" class="active">Songs</button>
+    <button id="tabPlaylists">Playlists</button>
+    <button id="tabRecent">Recent</button>
+  </nav>
+  <main>
+    <div id="songsTab"></div>
+    <div id="playlistsTab" hidden></div>
+    <div id="recentTab" hidden></div>
+  </main>
+</div>
+
+<!-- MINI PLAYER -->
+<div id="miniPlayer" hidden>
+  <div class="disc">♪</div>
+  <div class="meta"><div class="t" id="mpTitle">—</div><div class="a" id="mpArtist">—</div></div>
+  <button class="cbtn" id="mpToggle">▶</button>
+</div>
+
+<!-- FULL PLAYER -->
+<div id="fullPlayer" hidden>
+  <button class="close" id="fpClose">close ✕</button>
+  <div class="art">♪</div>
+  <div class="ftitle" id="fpTitle">—</div>
+  <div class="fartist" id="fpArtist">—</div>
+  <input type="range" id="seek" min="0" max="1000" value="0">
+  <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
+  <div class="controls">
+    <button class="sbtn" id="btnShuffle" title="Shuffle">🔀</button>
+    <button class="sbtn" id="btnPrev" style="font-size:26px" title="Previous">⏮</button>
+    <button class="cbtn" id="btnPlay" title="Play/Pause">▶</button>
+    <button class="sbtn" id="btnNext" style="font-size:26px" title="Next">⏭</button>
+    <button class="sbtn" id="btnRepeat" title="Repeat">↻</button>
+  </div>
+  <div class="volrow">🔈 <input type="range" id="vol" min="0" max="100" value="90"> 🔊</div>
+  <button class="btn secondary" id="fpSync">Sync new songs</button>
+</div>
+
+<!-- PLAYLIST PICKER MODAL -->
+<div id="pickerModal" class="modal" hidden>
+  <div class="sheet">
+    <h3>Add to playlist</h3>
+    <div id="pickerList"></div>
+    <input id="newPlName" placeholder="New playlist name...">
+    <button class="btn" id="createPlBtn">Create playlist</button>
+    <button class="btn secondary" id="pickerClose" style="margin-top:8px;">Cancel</button>
+  </div>
+</div>
+
+<!-- PLAYLIST DETAIL MODAL -->
+<div id="plModal" class="modal" hidden>
+  <div class="sheet">
+    <h3 id="plTitle">Playlist</h3>
+    <div id="plSongs"></div>
+    <button class="btn secondary" id="plClose" style="margin-top:8px;">Close</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<audio id="audio" preload="none"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
