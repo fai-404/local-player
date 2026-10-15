@@ -86,3 +86,29 @@
   @keyframes spin{to{transform:rotate(360deg);}}
   .likebtn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;flex-shrink:0;padding:2px 4px;}
   .likebtn.on{color:var(--accent);}
+  /* ---- impressive UI upgrade ---- */
+  header h1,.t,.ftitle,.greet,.hcard .t{font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .artimg{width:46px;height:46px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .artimg.big{width:230px;height:230px;max-width:62vw;max-height:62vw;border-radius:24px;margin:24px auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .eq{display:flex;align-items:flex-end;gap:3px;height:20px;}
+  .eq span{width:3px;background:rgba(255,255,255,.9);border-radius:2px;height:6px;animation:eqb 0.9s ease-in-out infinite;animation-play-state:paused;}
+  .eq span:nth-child(2){animation-delay:.22s;}.eq span:nth-child(3){animation-delay:.4s;}.eq span:nth-child(4){animation-delay:.12s;}
+  body.is-playing .eq span{animation-play-state:running;}
+  @keyframes eqb{0%,100%{height:6px;}50%{height:18px;}}
+  #fullPlayer{position:relative;overflow:hidden;}
+  #fullPlayer>*{position:relative;z-index:1;}
+  #fpGlow{position:absolute!important;inset:-60px;filter:blur(90px);opacity:.38;z-index:0!important;}
+  main>div{animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .greet{font-size:24px;font-weight:700;margin:14px 0 2px;}
+  .hscroll{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 14px;scrollbar-width:none;}
+  .hscroll::-webkit-scrollbar{display:none;}
+  .hcard{min-width:138px;max-width:138px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:10px;cursor:pointer;}
+  .hcard:active{transform:scale(.97);}
+  .swatches{display:flex;gap:10px;margin:4px 0 6px;}
+  .swatch{width:38px;height:38px;border-radius:50%;cursor:pointer;border:3px solid transparent;}
+  .swatch.sel{border-color:#fff;}
+  body.oled{--bg:#000;--card:#0b0b0d;--card2:#111114;--border:#1c1c1f;}
+  nav{overflow-x:auto;scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav button{white-space:nowrap;}
