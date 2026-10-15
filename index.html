@@ -27,16 +27,18 @@
 <!-- APP -->
 <div id="appView" hidden>
   <header>
-    <h1>My Music <span><button id="syncBtn" title="Sync new songs">sync</button> <button id="resetBtn" title="Change bot / erase data">reset</button></span></h1>
+    <h1>My Music <span><button id="syncBtn" title="Sync new songs">sync</button><button id="exportBtn" title="Export library">export</button><button id="importBtn" title="Import library">import</button><button id="resetBtn" title="Change bot / erase data">reset</button></span></h1>
     <input id="search" type="search" placeholder="Search songs...">
   </header>
   <nav>
     <button id="tabSongs" class="active">Songs</button>
+    <button id="tabLiked">Liked</button>
     <button id="tabPlaylists">Playlists</button>
     <button id="tabRecent">Recent</button>
   </nav>
   <main>
     <div id="songsTab"></div>
+    <div id="likedTab" hidden></div>
     <div id="playlistsTab" hidden></div>
     <div id="recentTab" hidden></div>
   </main>
@@ -89,6 +91,7 @@
 </div>
 
 <div id="toast"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
 <audio id="audio" preload="none"></audio>
 
 <script src="script.js"></script>

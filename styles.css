@@ -84,3 +84,5 @@
   .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--muted);border-top-color:var(--accent);
     border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:-3px;margin-right:8px;}
   @keyframes spin{to{transform:rotate(360deg);}}
+  .likebtn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;flex-shrink:0;padding:2px 4px;}
+  .likebtn.on{color:var(--accent);}
