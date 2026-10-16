@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>My Music</title>
+<title>Ente Casette</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- SETUP -->
 <div id="setupView" hidden>
-  <h2>My Music</h2>
+  <h2>Ente Casette.</h2>
   <p>Your songs live in Telegram. This player streams them from your own bot — no storage used on your phone.</p>
   <ol>
     <li>Open Telegram and message <code>@BotFather</code> → send <code>/newbot</code> and follow the steps. Copy the token it gives you.</li>
@@ -21,53 +21,77 @@
   </ol>
   <input id="tokenInput" type="password" placeholder="Bot token (e.g. 123456:ABC...)" autocomplete="off">
   <button class="btn" id="saveTokenBtn">Save &amp; Continue</button>
-  <p style="font-size:12px;margin-top:14px;">Notes: the token stays in this browser only — keep it on a private device, or revoke it via @BotFather. Sync within 24 hours of sending songs. Files over 20 MB can't be streamed via the bot API. Don't set a webhook on the bot.</p>
+  <p class="fine">Notes: the token stays in this browser only — keep it on a private device, or revoke it via @BotFather. Sync within 24 hours of sending songs. Files over 20 MB can't be streamed via the bot API. Don't set a webhook on the bot.</p>
 </div>
 
 <!-- APP -->
 <div id="appView" hidden>
   <header>
-    <h1>My Music <span><button id="syncBtn" title="Sync new songs">sync</button><button id="exportBtn" title="Export library">export</button><button id="importBtn" title="Import library">import</button><button id="resetBtn" title="Change bot / erase data">reset</button></span></h1>
+    <div class="navbar">
+      <h1>Ente Casette.</h1>
+      <div class="navbtns">
+        <button id="syncBtn" class="btn-sync">Sync</button>
+        <div class="dd">
+          <button id="expBtn" class="btn-exp">Export ▾</button>
+          <div class="ddmenu" id="expMenu" hidden>
+            <button id="expDo">Export</button>
+            <button id="impDo">Import</button>
+            <button id="resetDo" class="danger">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <input id="search" type="search" placeholder="Search songs...">
   </header>
-  <nav>
-    <button id="tabSongs" class="active">Songs</button>
+  <nav class="tabs">
+    <button id="tabHome" class="active">Home</button>
+    <button id="tabLibrary">All music</button>
     <button id="tabLiked">Liked</button>
     <button id="tabPlaylists">Playlists</button>
-    <button id="tabRecent">Recent</button>
   </nav>
   <main>
-    <div id="songsTab"></div>
+    <div id="homeTab"></div>
+    <div id="libraryTab" hidden></div>
     <div id="likedTab" hidden></div>
     <div id="playlistsTab" hidden></div>
-    <div id="recentTab" hidden></div>
   </main>
 </div>
 
 <!-- MINI PLAYER -->
 <div id="miniPlayer" hidden>
-  <div class="disc">♪</div>
+  <div class="mbox"><span>♪</span></div>
   <div class="meta"><div class="t" id="mpTitle">—</div><div class="a" id="mpArtist">—</div></div>
   <button class="cbtn" id="mpToggle">▶</button>
 </div>
 
 <!-- FULL PLAYER -->
 <div id="fullPlayer" hidden>
-  <button class="close" id="fpClose">close ✕</button>
-  <div class="art">♪</div>
-  <div class="ftitle" id="fpTitle">—</div>
-  <div class="fartist" id="fpArtist">—</div>
-  <input type="range" id="seek" min="0" max="1000" value="0">
-  <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
-  <div class="controls">
-    <button class="sbtn" id="btnShuffle" title="Shuffle">🔀</button>
-    <button class="sbtn" id="btnPrev" style="font-size:26px" title="Previous">⏮</button>
-    <button class="cbtn" id="btnPlay" title="Play/Pause">▶</button>
-    <button class="sbtn" id="btnNext" style="font-size:26px" title="Next">⏭</button>
-    <button class="sbtn" id="btnRepeat" title="Repeat">↻</button>
+  <button class="fp-min" id="fpClose" title="Minimize">﹀</button>
+  <div class="fp-title" id="fpTitle">—</div>
+  <div class="fp-artist" id="fpArtist">—</div>
+  <div class="fp-progress">
+    <div class="fp-track" id="fpTrack"><div class="fp-fill" id="fpFill"></div></div>
+    <div class="fp-times"><span id="tCur">0:00</span><span id="tRem">-0:00</span></div>
   </div>
-  <div class="volrow">🔈 <input type="range" id="vol" min="0" max="100" value="90"> 🔊</div>
-  <button class="btn secondary" id="fpSync">Sync new songs</button>
+  <div class="fp-controls">
+    <button id="btnPrev" title="Previous">⏮</button>
+    <button id="btnPlay" class="fp-play" title="Play/Pause">▶</button>
+    <button id="btnNext" title="Next">⏭</button>
+  </div>
+  <div class="fp-pill">
+    <button id="btnShuffle" title="Shuffle">🔀</button>
+    <button id="btnRepeat" title="Repeat">↻</button>
+    <button id="btnQueue" title="Queue">☰</button>
+  </div>
+</div>
+
+<!-- QUEUE SHEET -->
+<div id="queueModal" class="modal" hidden>
+  <div class="sheet">
+    <h3>Up next</h3>
+    <div id="queueList"></div>
+    <button class="btn secondary" id="queueClose" style="margin-top:8px;">Close</button>
+  </div>
 </div>
 
 <!-- PLAYLIST PICKER MODAL -->
