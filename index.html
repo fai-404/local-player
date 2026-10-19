@@ -192,6 +192,45 @@ background:linear-gradient(180deg,rgba(14,14,14,.8),rgba(0,0,0,.96))}
 .search{margin:6px 12px 14px;padding:9px 14px;border:1.5px solid transparent;border-radius:14px;transition:border-color .25s ease,background .25s ease,box-shadow .25s ease,color .25s ease}
 .search:focus-within{border-color:rgba(132,255,0,.55);background:rgba(132,255,0,.05);box-shadow:0 0 0 3px rgba(132,255,0,.1);color:var(--g)}
 .search input{caret-color:var(--g)}
+/* ===== compact scale (iPhone XS friendly) ===== */
+:root{--nav:56px}
+header{gap:10px;padding:14px 16px 4px}
+.logo{font-size:20px;line-height:1;letter-spacing:-.4px}
+.pill{height:30px;padding:0 14px;font-size:12px;border-radius:10px}
+.sync{min-width:70px}
+.exp{gap:7px;padding:0 12px}.exp svg{width:10px;height:8px}
+.gear{width:28px;height:28px}.gear svg{width:21px;height:21px}
+.menu{top:52px;right:16px}.menu button{font-size:13px;padding:9px 11px}
+main{padding-top:10px}
+.head{padding:0 16px 8px}
+h1{font-size:24px;letter-spacing:-.3px}
+.cnt{font-size:12px;font-weight:600}
+.play-all{font-size:13px}
+.search{margin:2px 10px 8px}.search input{font-size:15px}.search svg{width:19px;height:19px}
+.sub{padding:0 18px 6px}
+.inner{padding:7px 16px;gap:12px}
+.art{width:42px;height:42px;border-radius:8px}.art>svg{width:22px;height:22px}
+.t{font-size:15.5px;font-weight:500;letter-spacing:-.1px}
+.a{font-size:12px;color:#9a9a9a;margin-top:2px}
+.heart{width:30px;height:30px}.heart svg{width:20px;height:20px}
+.acts button svg{width:18px;height:18px}
+.create{height:44px;font-size:16px;font-weight:500;border-radius:12px;margin:6px 16px 22px;width:calc(100% - 32px)}
+nav button{font-size:9.5px;gap:3px}nav svg{width:22px;height:22px}
+#mini{height:58px;bottom:calc(var(--nav) + 8px + env(safe-area-inset-bottom,0px));padding:0 9px 0 20px;border-radius:24px}
+#mini .t{font-size:16.5px;font-weight:500}
+.pb{width:38px;height:38px}.pb svg{width:15px;height:17px}
+.pt{font-size:21px}.pa{font-size:15px}
+.tm{font-size:12px}
+#qpanel .art{width:38px;height:38px}
+#qpanel .inner{padding:7px 16px}
+.qhead h3{font-size:18px}
+#setup{padding-left:18px;padding-right:18px}
+#setup h1{font-size:30px}
+#setup .lead,#setup ol{font-size:16px}
+#tok{height:50px;font-size:16px}
+#sform .create{height:50px;font-size:16px;margin:10px 0 16px;width:100%}
+#setup .note{font-size:13px}
+#pf h2,#pk h2{font-size:18px}
 </style>
 </head>
 <body>
@@ -283,7 +322,7 @@ async function sync(){
 /* ---------- rows / render ---------- */
 const IQ='<svg width="20" height="20" viewBox="0 0 24 24" class="ic" stroke-width="2"><path d="M3 6h13M3 12h13M3 18h7"/><path d="M15 14v7l6-3.5z" fill="currentColor"/></svg>',IP='<svg width="20" height="20" viewBox="0 0 24 24" class="ic" stroke-width="2"><path d="M12 4v16M4 12h16"/></svg>',IM='<svg width="20" height="20" viewBox="0 0 24 24" class="ic" stroke-width="2"><path d="M4 12h16"/></svg>';
 const heart=l=>`<button class="heart ${l?'l':''}" data-h><svg width="22" height="22" viewBox="0 0 24 24"><use href="#heart"/></svg></button>`;
-function row(s,m){const c=curSong();return `<div class="row ${c&&c.fileId===s.fileId?'cur':''}" data-id="${esc(s.fileId)}"><div class="acts"><button data-q title="Add to queue">${IQ}</button>${m==='pl'?`<button data-r title="Remove">${IM}</button>`:`<button data-p title="Add to playlist">${IP}</button>`}</div><div class="inner"><div class="art"><svg width="26" height="26"><use href="#note"/></svg></div><div class="meta"><div class="t">${esc(s.title)}</div><div class="a">${esc(s.artist)}${s.duration?' . '+f2(s.duration):''}</div></div>${heart(D.liked.has(s.fileId))}</div></div>`}
+function row(s,m){const c=curSong();return `<div class="row ${c&&c.fileId===s.fileId?'cur':''}" data-id="${esc(s.fileId)}"><div class="acts"><button data-q title="Add to queue">${IQ}</button>${m==='pl'?`<button data-r title="Remove">${IM}</button>`:`<button data-p title="Add to playlist">${IP}</button>`}</div><div class="inner"><div class="art"><svg width="26" height="26"><use href="#note"/></svg></div><div class="meta"><div class="t">${esc(s.title)}</div><div class="a">${esc(s.artist)}${s.duration?' · '+f2(s.duration):''}</div></div>${heart(D.liked.has(s.fileId))}</div></div>`}
 const libList=()=>{const q=$('#q').value.trim().toLowerCase();return D.lib.filter(s=>(s.title+' '+s.artist).toLowerCase().includes(q))};
 function render(){
  const none='<div class="empty">No songs yet.<br>Tap Sync to load songs from your Telegram bot.</div>',L=D.lib.length;
@@ -314,7 +353,7 @@ const PLAY='<svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.5l15 8
 const PAUSE='<svg width="18" height="20" viewBox="0 0 18 20"><path d="M4 2v16M14 2v16" stroke="#000" stroke-width="3.5" stroke-linecap="round"/></svg>';
 const BP='<svg width="38" height="38" viewBox="0 0 24 24"><path d="M7 3v18M17 3v18" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/></svg>',BG='<svg width="38" height="38" viewBox="0 0 24 24"><path d="M5 2.5l16 9.5-16 9.5z" fill="currentColor" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>';
 function setBtns(){const p=!au.paused&&!isSil();$('#mpb').innerHTML=p?PAUSE:PLAY;$('#big').innerHTML=p?BP:BG}
-function ui(s){$('#mt').textContent=$('#pt').textContent=s.title;$('#ma').textContent=s.artist+(s.duration?' . '+f2(s.duration):'');$('#pa').textContent=s.artist;setBtns();tick();
+function ui(s){$('#mt').textContent=$('#pt').textContent=s.title;$('#ma').textContent=s.artist+(s.duration?' · '+f2(s.duration):'');$('#pa').textContent=s.artist;setBtns();tick();
  if('mediaSession' in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:s.title,artist:s.artist})}
 function tick(){const s=curSong();if(!s||isSil())return;const d=isFinite(au.duration)&&au.duration>0?au.duration:s.duration||0,t=au.currentTime||0;$('#fill').style.width=(d?Math.min(100,t/d*100):0)+'%';$('#e').textContent=fmt(t);$('#r').textContent='-'+fmt(d-t)}
 let lt=0;
