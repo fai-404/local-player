@@ -231,6 +231,11 @@ nav button{font-size:9.5px;gap:3px}nav svg{width:22px;height:22px}
 #sform .create{height:50px;font-size:16px;margin:10px 0 16px;width:100%}
 #setup .note{font-size:13px}
 #pf h2,#pk h2{font-size:18px}
+.inner{transition:transform .34s cubic-bezier(.22,1,.36,1);will-change:transform;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.inner.drag{transition:none}
+.row{touch-action:pan-y}
+.acts button{transition:filter .15s,transform .15s}.acts button:active{filter:brightness(.85)}
+main{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
 </style>
 </head>
 <body>
@@ -454,11 +459,32 @@ card.addEventListener('pointerdown',e=>{if(e.target.closest('.bar,button,#qlist'
 addEventListener('pointermove',e=>{if(!g)return;const dy=e.clientY-g.y;if(!g.on){if(g.m==='up'?dy<-8:dy>8){g.on=true;card.style.transition=sheet.style.transition='none'}else return}setP(g.m==='up'?-dy/(H()*.9):1-dy/(H()*.9))});
 function endDrag(e){if(!g)return;const m=g.m,dy=e.clientY-g.y,v=Math.abs(dy)/Math.max(1,e.timeStamp-g.t),on=g.on;g=null;if(!on)return;card.style.transition=sheet.style.transition='';card.style.transform='';sheet.style.removeProperty('--p');const far=Math.abs(dy)>H()*.22||v>.5;open(m==='up'?far&&dy<0:!(far&&dy>0));swiped=true;setTimeout(()=>swiped=false,60)}
 addEventListener('pointerup',endDrag);addEventListener('pointercancel',endDrag);
-/* ---------- swipe rows ---------- */
-const drag={moved:false};let ds=null;
-addEventListener('pointerdown',e=>{const r=e.target.closest('.row[data-id],.row[data-qi]');if(!r||r.classList.contains('now')||e.target.closest('.acts'))return;$$('.inner').forEach(i=>{if(i!==r.querySelector('.inner'))i.style.transform=''});ds={r:r.querySelector('.inner'),x:e.clientX,y:e.clientY,b:/-112/.test(r.querySelector('.inner').style.transform)?-112:0};drag.moved=false});
-addEventListener('pointermove',e=>{if(!ds)return;const dx=e.clientX-ds.x;if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(e.clientY-ds.y)){drag.moved=true;ds.r.classList.add('drag');ds.r.style.transform=`translateX(${Math.min(0,Math.max(-112,ds.b+dx))}px)`}});
-addEventListener('pointerup',e=>{if(!ds)return;ds.r.classList.remove('drag');if(drag.moved){const dx=e.clientX-ds.x;ds.r.style.transform=ds.b+dx<-50?'translateX(-112px)':''}ds=null;setTimeout(()=>drag.moved=false,0)});
+/* ---------- swipe rows (direction-locked, velocity snap, rubber band) ---------- */
+const drag={moved:false},W=112;let ds=null;
+const openRow=i=>{i.style.transform='translateX(-'+W+'px)'};
+addEventListener('pointerdown',e=>{
+ if(e.pointerType==='mouse'&&e.button!==0)return;
+ if(e.target.closest('.acts'))return;
+ const r=e.target.closest('.row[data-id],.row[data-qi]'),inn=r&&r.querySelector('.inner');
+ $$('.inner').forEach(i=>{if(i!==inn&&i.style.transform)i.style.transform=''});
+ if(!r||r.classList.contains('now'))return;
+ ds={inn,id:e.pointerId,x:e.clientX,y:e.clientY,b:/-112/.test(inn.style.transform)?-W:0,lock:null,lx:e.clientX,lt:e.timeStamp,v:0};drag.moved=false});
+addEventListener('pointermove',e=>{
+ if(!ds||e.pointerId!==ds.id)return;
+ const dx=e.clientX-ds.x,dy=e.clientY-ds.y;
+ if(!ds.lock){if(Math.abs(dx)<6&&Math.abs(dy)<6)return;if(Math.abs(dx)<Math.abs(dy)*1.2){ds=null;return}ds.lock='x';drag.moved=true;ds.inn.classList.add('drag');try{ds.inn.setPointerCapture(e.pointerId)}catch(_){}}
+ let x=ds.b+dx;if(x>0)x*=.2;else if(x<-W)x=-W+(x+W)*.2;
+ ds.inn.style.transform='translate3d('+x+'px,0,0)';
+ const dt=e.timeStamp-ds.lt;if(dt>0){ds.v=.7*ds.v+.3*((e.clientX-ds.lx)/dt);ds.lx=e.clientX;ds.lt=e.timeStamp}});
+function endSwipe(e){
+ if(!ds||e.pointerId!==ds.id)return;const d=ds;ds=null;
+ try{d.inn.releasePointerCapture(d.id)}catch(_){}
+ d.inn.classList.remove('drag');
+ if(d.lock==='x'){const m=d.inn.style.transform.match(/-?[\d.]+(?=px)/),cur=m?parseFloat(m[0]):0;
+  const open=e.type!=='pointercancel'&&Math.abs(d.v)>.35?d.v<0:cur<-W/2;
+  d.inn.style.transform=open?'translateX(-'+W+'px)':''}
+ setTimeout(()=>{drag.moved=false},80)}
+addEventListener('pointerup',endSwipe);addEventListener('pointercancel',endSwipe);
 /* ---------- init ---------- */
 render();if(!token)showSetup(false);
 </script>
